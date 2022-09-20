@@ -1,27 +1,37 @@
 import React, { Component } from "react";
 import { ScrollView, View, StyleSheet, Image, Text, TextInput, TouchableOpacity, Pressable } from "react-native";
-export default function Categories() {
-    return (
+import { Input } from 'react-native-elements';
+
+class Categories extends Component {
+    constructor(props) {
+        super(props)
+        this.db = new DatabaseClass()
+        this.navigation = props.navigation
+        this.state = {
+            cadastro_name: '',
+        }
+    }
+    return() {
         <View style={Styles.Conteiner}>
             <View>
                 <Text>Dados Pessoais</Text>
-                <View style={{ alignItems: 'center'}}>
+                <View style={{ alignItems: 'center' }}>
                     <View style={Styles.InputOne}>
                         <Text>Nome</Text>
-                        <TextInput placeholder="Digite o nome" />
+                        <Input type="text" placeholder="Digite o nome" onChangeText={text => this.setState({ cadastro_name: text })} />
                     </View>
                     <View style={Styles.InputOne}>
                         <Text>Sobrenome</Text>
-                        <TextInput placeholder="Digite o sobrenome" />
+                        <Input type="text" placeholder="Digite o sobrenome" onChangeText={text => this.setState({ cadastro_lastname: text })} />
                     </View>
                     <View style={Styles.ConteinerInputTwo}>
                         <View style={Styles.InputTwo}>
                             <Text>CPF</Text>
-                            <TextInput placeholder="Digite o CPF" />
+                            <Input type="text" placeholder="Digite o CPF" onChangeText={text => this.setState({ cadastro_cpf: text })} />
                         </View>
                         <View style={Styles.InputTwo}>
                             <Text>Nascimento</Text>
-                            <TextInput placeholder="Digite o Nascimento" />
+                            <Input type="text" placeholder="Digite o Nascimento" onChangeText={text => this.setState({ cadastro_date: text })} />
                         </View>
                     </View>
                 </View>
@@ -31,21 +41,59 @@ export default function Categories() {
                 <View>
                     <View style={Styles.InputOne}>
                         <Text>Telefone</Text>
-                        <TextInput placeholder="Digite o telefone" />
+                        <Input placeholder="Digite o telefone" onChangeText={text => this.setState({ cadastro_number: text })} />
                     </View>
                     <View style={Styles.InputOne}>
                         <Text>E-mail</Text>
-                        <TextInput placeholder="Digite o E-mail" />
+                        <Input placeholder="Digite o E-mail" onChangeText={text => this.setState({ cadastro_email: text })} />
                     </View>
                 </View>
+                <SimplePicker onChange={(value) => this.setState({ cadastro_type: value })} values={this.types} />
+                <SimplePicker onChange={(value) => this.setState({ cadastro_final: value })} values={this.final} />
+
+                <View>
+                    <ImagePicker title="Carregar foto" usePhotoFromLibrary={true} onTakePhoto={(uri) => this.setState({ cadastro_image: uri })} />
+                    <ImagePicker title="Tirar foto" saveCameraImage={true} onTakePhoto={(uri) => this.setState({ cadastro_image: uri })} />
+                </View>
+
+                {this.state.cadastro_image ?
+                    <View>
+                        {/* Acrescentei o estilo das dimensões da imagem, se não ela não aparece */}
+                        <Image style={{ marginVertical: 10, alignSelf: 'center', width: '100%', height: 250 }} source={{ uri: this.state.cadastro_image }} />
+
+                    </View>
+                    :
+                    <Text>Nenhuma imagem carregada!</Text>
+                }
             </View>
-            <View style={{width:300, alignItems:'center'}}>
-                <Pressable style={Styles.Button}>
+            <View style={{ width: 300, alignItems: 'center' }}>
+                <Pressable style={Styles.Button}
+                    onPress={this.add_form}>
                     <Text style={Styles.ButtonText}>Cadastrar</Text>
                 </Pressable>
             </View>
         </View>
-    );
+    }
+    add_form = (()=>{
+        let cadastro = new Cadastro({
+            name: this.state.anuncio_name,
+            image: this.state.anuncio_image,
+            price: this.state.anuncio_price,
+            address: this.state.anuncio_address,
+            final: this.state.anuncio_final,
+            type: this.state.anuncio_type,
+        })
+        if(!anuncio.isValidWithOutId()){
+            alert('Por favor preencha todos os campos!')
+            return
+        }
+        this.db.addNewAnuncio(anuncio).then(result => {
+            if(result){
+                this.navigation.pop()
+                this.sendAnuncioNotification(anuncio)
+            }else alert("Erro ao cadastrar anúncio!"+anuncio.name)
+        })
+    }).bind(this)
 }
 
 const Styles = StyleSheet.create({
@@ -54,7 +102,7 @@ const Styles = StyleSheet.create({
         height: '100%',
         color: 'white',
         alignItems: 'center',
-        justifyContent:'center'
+        justifyContent: 'center'
     },
     InputOne: {
         borderWidth: 1,
@@ -68,7 +116,7 @@ const Styles = StyleSheet.create({
         width: 300,
         margin: 5,
         justifyContent: 'space-between',
-    
+
 
     },
     InputTwo: {
@@ -80,21 +128,22 @@ const Styles = StyleSheet.create({
         width: 300,
         borderTopWidth: 1,
         marginTop: 15,
-        
+
 
 
     },
-    Button:{
-        width:300,
-        height:40,
-        borderRadius:2,
-        backgroundColor:'#2F4F4F',
-        alignItems:'center',
-        justifyContent:'center',
-        marginTop:9,
-        marginLeft:8
+    Button: {
+        width: 300,
+        height: 40,
+        borderRadius: 2,
+        backgroundColor: '#2F4F4F',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 9,
+        marginLeft: 8
     },
-    ButtonText:{
-        color:'white'
+    ButtonText: {
+        color: 'white'
     }
 })
+export default Categories;
