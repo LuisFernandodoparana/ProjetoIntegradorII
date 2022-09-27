@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { ScrollView, View, StyleSheet, Image, Text, TextInput, TouchableOpacity, Pressable } from "react-native";
-import { Input } from 'react-native-elements';
+import { Input } from "@rneui/themed";
+import Cadastro from "../models/cadastro";
+import DatabaseClass from "../services/database";
+import ImagePicker from "../components/ImagePicker"
 
 class Categories extends Component {
     constructor(props) {
@@ -9,6 +12,13 @@ class Categories extends Component {
         this.navigation = props.navigation
         this.state = {
             cadastro_name: '',
+            cadastro_lastname:'',
+            cadastro_cpf:'',
+            cadastro_date:'',
+            cadastro_email:'',
+            cadastro_number:'',
+            cadastro_image:''
+
         }
     }
     return() {
@@ -48,8 +58,6 @@ class Categories extends Component {
                         <Input placeholder="Digite o E-mail" onChangeText={text => this.setState({ cadastro_email: text })} />
                     </View>
                 </View>
-                <SimplePicker onChange={(value) => this.setState({ cadastro_type: value })} values={this.types} />
-                <SimplePicker onChange={(value) => this.setState({ cadastro_final: value })} values={this.final} />
 
                 <View>
                     <ImagePicker title="Carregar foto" usePhotoFromLibrary={true} onTakePhoto={(uri) => this.setState({ cadastro_image: uri })} />
@@ -87,11 +95,11 @@ class Categories extends Component {
             alert('Por favor preencha todos os campos!')
             return
         }
-        this.db.addNewAnuncio(anuncio).then(result => {
+        this.db.addNewCadastro(cadastro).then(result => {
             if(result){
                 this.navigation.pop()
-                this.sendAnuncioNotification(anuncio)
-            }else alert("Erro ao cadastrar anúncio!"+anuncio.name)
+                this.sendAnuncioNotification(cadastro)
+            }else alert("Erro ao cadastrar anúncio!"+cadastro.name)
         })
     }).bind(this)
 }
