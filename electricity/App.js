@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import  Icon  from "react-native-vector-icons/FontAwesome5";
 
 import StackNav from "./src/routes/StackNav";
-import form from "./src/Views/Form";
+import Categories from "./src/Views/Form";
 import Industria from './src/components/ProductsIndustriais';
 
 const Tab = createBottomTabNavigator()
@@ -34,7 +34,7 @@ export default function App() {
       >
         <Tab.Screen name={"Serviços Residenciais"} component={StackNav} />
         <Tab.Screen name={"Serviços Industriais"} component={Industria} />
-        <Tab.Screen name={"Trabalhe Conosco"} component={form} />
+        <Tab.Screen name={"Trabalhe Conosco"} component={Categories} />
       </Tab.Navigator>
     </NavigationContainer>
   )
