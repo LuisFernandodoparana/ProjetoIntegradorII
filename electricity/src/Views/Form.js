@@ -17,7 +17,6 @@ class Categories extends Component {
             cadastro_date:'',
             cadastro_email:'',
             cadastro_number:'',
-            cadastro_image:''
 
         }
     }

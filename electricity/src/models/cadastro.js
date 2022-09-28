@@ -6,8 +6,7 @@ export default class Cadastro{
         cpf:'',
         date:'',
         email:'',
-        number:'',
-        image:''
+        number:''
         
     }){
         this.id = data.id
@@ -17,10 +16,9 @@ export default class Cadastro{
         this.date = data.date
         this.email = data.email
         this.number = data.number
-        this.image = data.image
 
     }
     isValidWithOutId(){
-        return this.name && this.image && this.lastname && this.cpf && this.date && this.email && this.number
+        return this.name && this.lastname && this.cpf && this.date && this.email && this.number
     }
 }
