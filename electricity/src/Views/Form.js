@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { ScrollView, View, StyleSheet, Image, Text, TextInput, TouchableOpacity, Pressable } from "react-native";
 import Cadastro from "../models/cadastro";
 import DatabaseClass from "../services/database";
+import ImagePicker from "../components/ImagePicker";
 class Categories extends Component {
     constructor(props) {
         super(props)
@@ -20,62 +21,64 @@ class Categories extends Component {
 
     render() {
         return (
-            <View style={Styles.Conteiner}>
-                <View>
-                    <Text>Dados Pessoais</Text>
-                    <View style={{ alignItems: 'center' }}>
-                        <View style={Styles.InputOne}>
-                            <Text>Nome</Text>
-                            <TextInput placeholder="Digite o nome" onChangeText={text => this.setState({ cadastro_name: text })} />
-                        </View>
-                        <View style={Styles.InputOne}>
-                            <Text>Sobrenome</Text>
-                            <TextInput placeholder="Digite o sobrenome" />
-                        </View>
-                        <View style={Styles.ConteinerInputTwo}>
-                            <View style={Styles.InputTwo}>
-                                <Text>CPF</Text>
-                                <TextInput placeholder="Digite o CPF" />
-                            </View>
-                            <View style={Styles.InputTwo}>
-                                <Text>Nascimento</Text>
-                                <TextInput placeholder="Digite o Nascimento" />
-                            </View>
-                        </View>
-                    </View>
-                </View>
-                <View style={Styles.ConteinerFone}>
-                    <Text>Contato</Text>
+            <ScrollView>
+                <View style={Styles.Conteiner}>
                     <View>
-                        <View style={Styles.InputOne}>
-                            <Text>Telefone</Text>
-                            <TextInput placeholder="Digite o telefone" />
-                        </View>
-                        <View style={Styles.InputOne}>
-                            <Text>E-mail</Text>
-                            <TextInput placeholder="Digite o E-mail" />
+                        <Text>Dados Pessoais</Text>
+                        <View style={{ alignItems: 'center' }}>
+                            <View style={Styles.InputOne}>
+                                <Text>Nome</Text>
+                                <TextInput placeholder="Digite o nome" onChangeText={text => this.setState({ cadastro_name: text })} />
+                            </View>
+                            <View style={Styles.InputOne}>
+                                <Text>Sobrenome</Text>
+                                <TextInput placeholder="Digite o sobrenome" onChangeText={text => this.setState({ cadastro_sobrenome: text })} />
+                            </View>
+                            <View style={Styles.ConteinerInputTwo}>
+                                <View style={Styles.InputTwo}>
+                                    <Text>CPF</Text>
+                                    <TextInput placeholder="Digite o CPF" onChangeText={text => this.setState({ cadastro_cpf: text })}/>
+                                </View>
+                                <View style={Styles.InputTwo}>
+                                    <Text>Nascimento</Text>
+                                    <TextInput placeholder="Digite o Nascimento" onChangeText={text => this.setState({ cadastro_nascimento: text })}/>
+                                </View>
+                            </View>
                         </View>
                     </View>
-                    <View>
-                        <ImagePicker title="Carregar foto" usePhotoFromLibrary={true} onTakePhoto={(uri) => this.setState({ cadastro_image: uri })} />
-                        <ImagePicker title="Tirar foto" saveCameraImage={true} onTakePhoto={(uri) => this.setState({ cadastro_image: uri })} />
-                    </View>
-
-                    {this.state.cadastro_image ?
+                    <View style={Styles.ConteinerFone}>
+                        <Text>Contato</Text>
                         <View>
-                            <Image style={{ marginVertical: 10, alignSelf: 'center', width: '100%', height: 250 }} source={{ uri: this.state.anuncio_image }} />
-
+                            <View style={Styles.InputOne}>
+                                <Text>Telefone</Text>
+                                <TextInput placeholder="Digite o telefone" onChangeText={text => this.setState({ cadastro_telefone: text })} />
+                            </View>
+                            <View style={Styles.InputOne}>
+                                <Text>E-mail</Text>
+                                <TextInput placeholder="Digite o E-mail" onChangeText={text => this.setState({ cadastro_email: text })} />
+                            </View>
                         </View>
-                        :
-                        <Text>Nenhuma imagem carregada!</Text>
-                    }
+                        <View>
+                            <ImagePicker title="Carregar foto" usePhotoFromLibrary={true} onTakePhoto={(uri) => this.setState({ cadastro_image: uri })} />
+                            <ImagePicker title="Tirar foto" saveCameraImage={true} onTakePhoto={(uri) => this.setState({ cadastro_image: uri })} />
+                        </View>
+
+                        {this.state.cadastro_image ?
+                            <View>
+                                <Image style={{ marginVertical: 10, alignSelf: 'center', width: '100%', height: 250 }} source={{ uri: this.state.cadastro_image }} />
+
+                            </View>
+                            :
+                            <Text>Nenhuma imagem carregada!</Text>
+                        }
+                    </View>
+                    <View style={{ width: 300, alignItems: 'center' }}>
+                        <Pressable style={Styles.Button} onPress={this.add_address}>
+                            <Text style={Styles.ButtonText}>Cadastrar</Text>
+                        </Pressable>
+                    </View>
                 </View>
-                <View style={{ width: 300, alignItems: 'center' }}>
-                    <Pressable style={Styles.Button}>
-                        <Text style={Styles.ButtonText}>Cadastrar</Text>
-                    </Pressable>
-                </View>
-            </View>
+            </ScrollView>
         )
     }
     add_address = (() => {
@@ -92,10 +95,10 @@ class Categories extends Component {
             alert('Por favor preencha todos os campos!')
             return
         }
-        this.db.addNewAnuncio(cadastro).then(result => {
+        this.db.addNewCadastro(cadastro).then(result => {
             if (result) {
                 this.navigation.pop()
-                this.sendAnuncioNotification(cadastro)
+                this.sendCadastroNotification(cadastro)
             } else alert("Erro ao cadastrar os dados pessoais! referentes a" + cadastro.name)
         })
     }).bind(this)
@@ -107,7 +110,8 @@ const Styles = StyleSheet.create({
         height: '100%',
         color: 'white',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        flex: 1
     },
     InputOne: {
         borderWidth: 1,

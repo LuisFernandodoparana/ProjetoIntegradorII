@@ -9,7 +9,7 @@ export default class Database{
             console.log("Banco de dados iniciado")
         })
     }
-    loadAnuncios(){
+    loadCadastros(){
         return new Promise(resolve => {
             this.db.executeQuery(`SELECT * FROM ${this.table_name}`, (_, res) => {
                 resolve(res.rows._array)
