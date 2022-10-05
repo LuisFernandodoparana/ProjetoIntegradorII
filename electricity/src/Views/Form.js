@@ -1,11 +1,14 @@
 import React, { Component } from "react";
+import ImagePicker from "../components/ImagePicker";
 import { ScrollView, View, StyleSheet, Image, Text, TextInput, TouchableOpacity, Pressable } from "react-native";
+
 export default function Categories() {
+
     return (
         <View style={Styles.Conteiner}>
             <View>
                 <Text>Dados Pessoais</Text>
-                <View style={{ alignItems: 'center'}}>
+                <View style={{ alignItems: 'center' }}>
                     <View style={Styles.InputOne}>
                         <Text>Nome</Text>
                         <TextInput placeholder="Digite o nome" />
@@ -37,9 +40,23 @@ export default function Categories() {
                         <Text>E-mail</Text>
                         <TextInput placeholder="Digite o E-mail" />
                     </View>
+                    <View>
+                        <ImagePicker title="Carregar foto" usePhotoFromLibrary={true} onTakePhoto={(uri) => this.setState({ anuncio_image: uri })} />
+                        <ImagePicker title="Tirar foto" saveCameraImage={true} onTakePhoto={(uri) => this.setState({ anuncio_image: uri })} />
+                    </View>
+
+                    {this.state.anuncio_image ?
+                        <View>
+                            {/* Acrescentei o estilo das dimensões da imagem, se não ela não aparece */}
+                            <Image style={{ marginVertical: 10, alignSelf: 'center', width: '100%', height: 250 }} source={{ uri: this.state.anuncio_image }} />
+
+                        </View>
+                        :
+                        <Text>Nenhuma imagem carregada!</Text>
+                    }
                 </View>
             </View>
-            <View style={{width:300, alignItems:'center'}}>
+            <View style={{ width: 300, alignItems: 'center' }}>
                 <Pressable style={Styles.Button}>
                     <Text style={Styles.ButtonText}>Cadastrar</Text>
                 </Pressable>
@@ -54,7 +71,7 @@ const Styles = StyleSheet.create({
         height: '100%',
         color: 'white',
         alignItems: 'center',
-        justifyContent:'center'
+        justifyContent: 'center'
     },
     InputOne: {
         borderWidth: 1,
@@ -68,7 +85,7 @@ const Styles = StyleSheet.create({
         width: 300,
         margin: 5,
         justifyContent: 'space-between',
-    
+
 
     },
     InputTwo: {
@@ -80,21 +97,21 @@ const Styles = StyleSheet.create({
         width: 300,
         borderTopWidth: 1,
         marginTop: 15,
-        
+
 
 
     },
-    Button:{
-        width:300,
-        height:40,
-        borderRadius:2,
-        backgroundColor:'#2F4F4F',
-        alignItems:'center',
-        justifyContent:'center',
-        marginTop:9,
-        marginLeft:8
+    Button: {
+        width: 300,
+        height: 40,
+        borderRadius: 2,
+        backgroundColor: '#2F4F4F',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 9,
+        marginLeft: 8
     },
-    ButtonText:{
-        color:'white'
+    ButtonText: {
+        color: 'white'
     }
 })
