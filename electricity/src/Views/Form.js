@@ -1,53 +1,68 @@
 import React, { Component } from "react";
-import ImagePicker from "../components/ImagePicker";
 import { ScrollView, View, StyleSheet, Image, Text, TextInput, TouchableOpacity, Pressable } from "react-native";
+import Cadastro from "../models/cadastro";
+import DatabaseClass from "../services/database";
+class Categories extends Component {
+    constructor(props) {
+        super(props)
+        this.db = new DatabaseClass()
+        this.navigation = props.navigation
+        this.state = {
+            cadastro_name: '',
+            cadastro_sobrenome: '',
+            cadastro_cpf: '',
+            cadastro_nascimento: '',
+            cadastro_telefone: '',
+            cadastro_email: '',
+            cadastro_image: ''
+        }
+    }
 
-export default function Categories() {
-
-    return (
-        <View style={Styles.Conteiner}>
-            <View>
-                <Text>Dados Pessoais</Text>
-                <View style={{ alignItems: 'center' }}>
-                    <View style={Styles.InputOne}>
-                        <Text>Nome</Text>
-                        <TextInput placeholder="Digite o nome" />
-                    </View>
-                    <View style={Styles.InputOne}>
-                        <Text>Sobrenome</Text>
-                        <TextInput placeholder="Digite o sobrenome" />
-                    </View>
-                    <View style={Styles.ConteinerInputTwo}>
-                        <View style={Styles.InputTwo}>
-                            <Text>CPF</Text>
-                            <TextInput placeholder="Digite o CPF" />
+    render() {
+        return (
+            <View style={Styles.Conteiner}>
+                <View>
+                    <Text>Dados Pessoais</Text>
+                    <View style={{ alignItems: 'center' }}>
+                        <View style={Styles.InputOne}>
+                            <Text>Nome</Text>
+                            <TextInput placeholder="Digite o nome" onChangeText={text => this.setState({ cadastro_name: text })} />
                         </View>
-                        <View style={Styles.InputTwo}>
-                            <Text>Nascimento</Text>
-                            <TextInput placeholder="Digite o Nascimento" />
+                        <View style={Styles.InputOne}>
+                            <Text>Sobrenome</Text>
+                            <TextInput placeholder="Digite o sobrenome" />
+                        </View>
+                        <View style={Styles.ConteinerInputTwo}>
+                            <View style={Styles.InputTwo}>
+                                <Text>CPF</Text>
+                                <TextInput placeholder="Digite o CPF" />
+                            </View>
+                            <View style={Styles.InputTwo}>
+                                <Text>Nascimento</Text>
+                                <TextInput placeholder="Digite o Nascimento" />
+                            </View>
                         </View>
                     </View>
                 </View>
-            </View>
-            <View style={Styles.ConteinerFone}>
-                <Text>Contato</Text>
-                <View>
-                    <View style={Styles.InputOne}>
-                        <Text>Telefone</Text>
-                        <TextInput placeholder="Digite o telefone" />
-                    </View>
-                    <View style={Styles.InputOne}>
-                        <Text>E-mail</Text>
-                        <TextInput placeholder="Digite o E-mail" />
+                <View style={Styles.ConteinerFone}>
+                    <Text>Contato</Text>
+                    <View>
+                        <View style={Styles.InputOne}>
+                            <Text>Telefone</Text>
+                            <TextInput placeholder="Digite o telefone" />
+                        </View>
+                        <View style={Styles.InputOne}>
+                            <Text>E-mail</Text>
+                            <TextInput placeholder="Digite o E-mail" />
+                        </View>
                     </View>
                     <View>
-                        <ImagePicker title="Carregar foto" usePhotoFromLibrary={true} onTakePhoto={(uri) => this.setState({ anuncio_image: uri })} />
-                        <ImagePicker title="Tirar foto" saveCameraImage={true} onTakePhoto={(uri) => this.setState({ anuncio_image: uri })} />
+                        <ImagePicker title="Carregar foto" usePhotoFromLibrary={true} onTakePhoto={(uri) => this.setState({ cadastro_image: uri })} />
+                        <ImagePicker title="Tirar foto" saveCameraImage={true} onTakePhoto={(uri) => this.setState({ cadastro_image: uri })} />
                     </View>
 
-                    {this.state.anuncio_image ?
+                    {this.state.cadastro_image ?
                         <View>
-                            {/* Acrescentei o estilo das dimensões da imagem, se não ela não aparece */}
                             <Image style={{ marginVertical: 10, alignSelf: 'center', width: '100%', height: 250 }} source={{ uri: this.state.anuncio_image }} />
 
                         </View>
@@ -55,16 +70,37 @@ export default function Categories() {
                         <Text>Nenhuma imagem carregada!</Text>
                     }
                 </View>
+                <View style={{ width: 300, alignItems: 'center' }}>
+                    <Pressable style={Styles.Button}>
+                        <Text style={Styles.ButtonText}>Cadastrar</Text>
+                    </Pressable>
+                </View>
             </View>
-            <View style={{ width: 300, alignItems: 'center' }}>
-                <Pressable style={Styles.Button}>
-                    <Text style={Styles.ButtonText}>Cadastrar</Text>
-                </Pressable>
-            </View>
-        </View>
-    );
+        )
+    }
+    add_address = (() => {
+        let cadastro = new Cadastro({
+            name: this.state.cadastro_name,
+            sobrenome: this.state.cadastro_sobrenome,
+            cpf: this.state.cadastro_cpf,
+            nascimento: this.state.cadastro_nascimento,
+            telefone: this.state.cadastro_telefone,
+            email: this.state.cadastro_email,
+            image: this.state.cadastro_image
+        })
+        if (!cadastro.isValidWithOutId()) {
+            alert('Por favor preencha todos os campos!')
+            return
+        }
+        this.db.addNewAnuncio(cadastro).then(result => {
+            if (result) {
+                this.navigation.pop()
+                this.sendAnuncioNotification(cadastro)
+            } else alert("Erro ao cadastrar os dados pessoais! referentes a" + cadastro.name)
+        })
+    }).bind(this)
 }
-
+export default Categories;
 const Styles = StyleSheet.create({
     Conteiner: {
         width: '100%',
