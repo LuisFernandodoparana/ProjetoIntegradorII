@@ -59,6 +59,7 @@ class Categories extends Component {
                             </View>
                         </View>
                         <View>
+                            <Text>Foto do Rosto</Text>
                             <ImagePicker title="Carregar foto" usePhotoFromLibrary={true} onTakePhoto={(uri) => this.setState({ cadastro_image: uri })} />
                             <ImagePicker title="Tirar foto" saveCameraImage={true} onTakePhoto={(uri) => this.setState({ cadastro_image: uri })} />
                         </View>
