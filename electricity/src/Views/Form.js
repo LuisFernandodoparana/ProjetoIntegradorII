@@ -37,11 +37,11 @@ class Categories extends Component {
                             <View style={Styles.ConteinerInputTwo}>
                                 <View style={Styles.InputTwo}>
                                     <Text>CPF</Text>
-                                    <TextInput placeholder="Digite o CPF" onChangeText={text => this.setState({ cadastro_cpf: text })}/>
+                                    <TextInput placeholder="Digite o CPF" onChangeText={text => this.setState({ cadastro_cpf: text })} />
                                 </View>
                                 <View style={Styles.InputTwo}>
                                     <Text>Nascimento</Text>
-                                    <TextInput placeholder="Digite o Nascimento" onChangeText={text => this.setState({ cadastro_nascimento: text })}/>
+                                    <TextInput placeholder="Digite o Nascimento" onChangeText={text => this.setState({ cadastro_nascimento: text })} />
                                 </View>
                             </View>
                         </View>
